@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('activities') }}">Activities</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ activity.name }}</li>
+            </ol>
+        </nav>
+
+        <h1>{{ activity.name }}</h1>
+        <p class="text-muted">{{ activity.start_date_local.strftime('%A, %B %d, %Y at %I:%M %p') }}</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Activity Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-1"><strong>Distance:</strong></p>
+                        <h4>{{ "%.2f"|format(activity.distance/1000) }} km</h4>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-1"><strong>Moving Time:</strong></p>
+                        <h4>{{ (activity.moving_time//3600) }}h {{ (activity.moving_time%3600)//60 }}m</h4>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <p class="mb-1"><strong>Elevation Gain:</strong></p>
+                        <h4>{{ "%.0f"|format(activity.total_elevation_gain) }} m</h4>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-1"><strong>Average Speed:</strong></p>
+                        <h4>{{ "%.1f"|format(activity.average_speed * 3.6) }} km/h</h4>
+                    </div>
+                </div>
+
+                {% if activity.average_heartrate %}
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <p class="mb-1"><strong>Avg Heartrate:</strong></p>
+                        <h4>{{ "%.0f"|format(activity.average_heartrate) }} bpm</h4>
+                    </div>
+                    {% if activity.max_heartrate %}
+                    <div class="col-6">
+                        <p class="mb-1"><strong>Max Heartrate:</strong></p>
+                        <h4>{{ "%.0f"|format(activity.max_heartrate) }} bpm</h4>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if activity.description %}
+                <div class="mt-3">
+                    <p class="mb-1"><strong>Description:</strong></p>
+                    <p>{{ activity.description }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <!-- Placeholder for map -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Route Map</h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="text-muted">Map visualization would appear here with proper API access</p>
+                <i class="bi bi-map" style="font-size: 3rem;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if similar_activities %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Historical Comparisons</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Distance (km)</th>
+                                <th>Time</th>
+                                <th>Avg Speed (km/h)</th>
+                                <th>Elevation (m)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for similar in similar_activities %}
+                            <tr>
+                                <td>{{ similar.start_date_local.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ "%.2f"|format(similar.distance/1000) }}</td>
+                                <td>{{ (similar.moving_time//3600) }}h {{ (similar.moving_time%3600)//60 }}m</td>
+                                <td>{{ "%.1f"|format(similar.average_speed * 3.6) }}</td>
+                                <td>{{ "%.0f"|format(similar.total_elevation_gain) }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="table-primary">
+                                <td><strong>{{ activity.start_date_local.strftime('%Y-%m-%d') }}</strong></td>
+                                <td><strong>{{ "%.2f"|format(activity.distance/1000) }}</strong></td>
+                                <td><strong>{{ (activity.moving_time//3600) }}h {{ (activity.moving_time%3600)//60 }}m</strong></td>
+                                <td><strong>{{ "%.1f"|format(activity.average_speed * 3.6) }}</strong></td>
+                                <td><strong>{{ "%.0f"|format(activity.total_elevation_gain) }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

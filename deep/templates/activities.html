@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Activities</h1>
+
+        <!-- Filter Form -->
+        <form method="GET" class="row g-3 mb-4">
+            <div class="col-md-3">
+                <select name="type" class="form-select">
+                    <option value="">All Activity Types</option>
+                    {% for type in activity_types %}
+                    <option value="{{ type }}" {% if selected_type == type %}selected{% endif %}>{{ type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+
+        <!-- Activities List -->
+        {% if activities.items %}
+        <div class="list-group">
+            {% for activity in activities.items %}
+            <a href="{{ url_for('activity_detail', activity_id=activity.id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ activity.name }}</h5>
+                    <small>{{ activity.start_date_local.strftime('%b %d, %Y') }}</small>
+                </div>
+                <p class="mb-1">
+                    <span class="badge bg-primary">{{ activity.type }}</span>
+                    <span class="badge bg-secondary">{{ "%.2f"|format(activity.distance/1000) }} km</span>
+                    <span class="badge bg-info">{{ (activity.moving_time//60) }} min</span>
+                    {% if activity.total_elevation_gain %}
+                    <span class="badge bg-success">{{ "%.0f"|format(activity.total_elevation_gain) }} m elevation</span>
+                    {% endif %}
+                </p>
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if activities.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('activities', page=activities.prev_num, type=selected_type) }}">Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+                {% endif %}
+
+                {% for page_num in activities.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        {% if activities.page == page_num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('activities', page=page_num, type=selected_type) }}">{{ page_num }}</a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">…</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if activities.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('activities', page=activities.next_num, type=selected_type) }}">Next</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            No activities found.
+            {% if selected_type %}
+            Try changing your filter or <a href="{{ url_for('refresh_activities') }}">refresh your data</a>.
+            {% else %}
+            <a href="{{ url_for('refresh_activities') }}">Refresh your data</a> to load activities.
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

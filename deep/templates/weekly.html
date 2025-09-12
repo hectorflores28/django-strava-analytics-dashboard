@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Weekly Progress</h1>
+        <p class="text-muted">Your activity data grouped by week</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        {% if weekly_data %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        <th>Activities</th>
+                        <th>Distance (km)</th>
+                        <th>Elevation (m)</th>
+                        <th>Time (h)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for week in weekly_data %}
+                    <tr>
+                        <td>{{ week.week }}</td>
+                        <td>{{ week.data.count }}</td>
+                        <td>{{ "%.2f"|format(week.data.distance) }}</td>
+                        <td>{{ "%.0f"|format(week.data.elevation) }}</td>
+                        <td>{{ "%.1f"|format(week.data.time) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            No weekly data available. <a href="{{ url_for('refresh_activities') }}">Refresh your data</a> to load activities.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
