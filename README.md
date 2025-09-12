@@ -43,7 +43,7 @@ A comprehensive local web application for tracking and analyzing your Strava act
 1. **Clone the repository**
    ```bash
    git clone https://github.com/hectorflores28/flask-strava-analytics-dashboard
-   cd strava-python-project
+   cd flask-strava-analytics-dashboard
    ```
 
 2. **Install dependencies**
@@ -63,7 +63,7 @@ A comprehensive local web application for tracking and analyzing your Strava act
 5. **Set up cron job for daily updates**
    ```bash
    # Add to crontab (crontab -e)
-   0 2 * * * cd /path/to/strava-python-project && python daily_update.py
+   0 2 * * * cd /path/to/flask-strava-analytics-dashboard && python daily_update.py
    ```
 
 6. **Run the web application**
@@ -73,7 +73,7 @@ A comprehensive local web application for tracking and analyzing your Strava act
 
 ### Project Structure
 ```
-strava-python-project/
+flask-strava-analytics-dashboard/
 ├── StravaAPIv3.md          # API reference documentation
 ├── config.py               # Configuration settings
 ├── daily_update.py         # Daily data update script
