@@ -71,6 +71,11 @@ A comprehensive local web application for tracking and analyzing your Strava act
    python app.py
    ```
 
+### .env variables
+STRAVA_CLIENT_ID=your_strava_client_id
+STRAVA_CLIENT_SECRET=your_strava_client_secret
+SECRET_KEY=your_secret_key
+
 ### Project Structure
 ```
 flask-strava-analytics-dashboard/
