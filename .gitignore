@@ -1,0 +1,34 @@
+# Archivos de Python generados por el entorno
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entorno virtual
+venv/
+env/
+.env
+
+# Base de datos SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos de configuración y claves sensibles (no deben subirse)
+instance/
+config.py
+.flaskenv
+.vscode/
+
+# Logs y archivos de depuración
+*.log
+!debug.log
+
+# Archivos de respaldo
+*~
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de Texto
+FLASK_STAVA_API_V3.txt
