@@ -1,0 +1,114 @@
+/* Crear models.py */
+/* Implementar daily_update.py */
+/* Reactorizar strava_client.py */
+
+/*
+    Strava-Inspired CSS Theme
+    -------------------------
+    - Brand Colors:
+        - Strava Orange: #fc4c02
+        - Dark Grey: #2b2b2b
+        - Light Grey: #f0f0f0
+        - Text: #333
+*/
+
+:root {
+    --strava-orange: #fc4c02;
+    --strava-dark: #2b2b2b;
+    --strava-light: #f0f0f0;
+    --strava-text: #333;
+}
+
+body {
+    background-color: var(--strava-light);
+    color: var(--strava-text);
+}
+
+/* Navbar */
+.navbar.bg-primary {
+    background-color: var(--strava-dark) !important;
+}
+
+.navbar-brand,
+.nav-link {
+    color: #fff !important;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: var(--strava-orange) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--strava-orange);
+    border-color: var(--strava-orange);
+}
+
+.btn-primary:hover {
+    background-color: #e54402; /* Slightly darker orange */
+    border-color: #e54402;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: var(--strava-dark);
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Badges */
+.badge.bg-primary {
+    background-color: var(--strava-orange) !important;
+}
+
+.badge.bg-secondary,
+.badge.bg-info,
+.badge.bg-success {
+    background-color: var(--strava-dark) !important;
+}
+
+/* Tables */
+.table {
+    --bs-table-striped-bg: #fafafa;
+}
+
+.table-primary {
+    --bs-table-bg: #fff5f0;
+    --bs-table-striped-bg: #f8e8e0;
+}
+
+/* Links */
+a {
+    color: var(--strava-orange);
+    text-decoration: none;
+}
+
+a:hover {
+    color: #e54402;
+}
+
+/* Jumbotron (login page) */
+.jumbotron {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Placeholder for icons */
+.bi-map,
+.bi-activity,
+.bi-signpost,
+.bi-mountain,
+.bi-clock,
+.bi-fire,
+.bi-trophy,
+.bi-calendar {
+    color: var(--strava-orange);
+}
