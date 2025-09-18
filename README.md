@@ -95,7 +95,7 @@ flask-strava-analytics-dashboard/
 ```
 
 ## Referencia de la API
-Consulta la [Documentación Local de Strava_API_v3](StravaAPIv3.md) en el directorio raíz para obtener la documentación completa de la API de Strava v3 y detalles de los endpoints.
+Consulta la [Documentación StravaAPIv3](StravaAPIv3.md) en el directorio raíz para obtener la documentación completa de la API de Strava v3 y detalles de los endpoints.
 
 ## Desarrollo
 Este proyecto utiliza:
