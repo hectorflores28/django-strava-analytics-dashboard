@@ -2,6 +2,8 @@
 
 Una aplicación web local completa para rastrear y analizar tus datos de actividad de Strava con actualizaciones automáticas diarias.
 
+[StravaAPIv3](assets/StravaAPI.jpeg)
+
 ## Funcionalidades
 
 ### Vistas del Panel
@@ -95,7 +97,7 @@ flask-strava-analytics-dashboard/
 ```
 
 ## Referencia de la API
-Consulta la [Documentación StravaAPIv3](StravaAPIv3.md) en el directorio raíz para obtener la documentación completa de la API de Strava v3 y detalles de los endpoints.
+Consulta la [Documentación StravaAPIv3](assets/StravaAPIv3.md) en el directorio raíz para obtener la documentación completa de la API de Strava v3 y detalles de los endpoints.
 
 ## Desarrollo
 Este proyecto utiliza:
