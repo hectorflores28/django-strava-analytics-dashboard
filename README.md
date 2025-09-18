@@ -1,112 +1,114 @@
-# Strava Analytics Dashboard
+# Panel de Análisis de Strava
 
-A comprehensive local web application for tracking and analyzing your Strava activity data with daily automatic updates.
+Una aplicación web local completa para rastrear y analizar tus datos de actividad de Strava con actualizaciones automáticas diarias.
 
-## Features
+## Funcionalidades
 
-### Dashboard Views
-- **Daily, Weekly, Monthly** activity summaries
-- **Progress tracking** with activity counts, distance, elevation gain, and time
-- **Streak tracking** showing consecutive days and total active days
-- **Goal tracking** for weekly distance targets
-- **Interactive graphs** with week/month comparison capabilities
-- **Monthly calendar view** showing daily activity status
-- **Relative Effort analysis**
-- **Monthly recap reports**
+### Vistas del Panel
+- Resúmenes de actividad **Diarios, Semanales, Mensuales**
+- **Seguimiento de progreso** con conteo de actividades, distancia, desnivel acumulado y tiempo
+- **Seguimiento de rachas** que muestra días consecutivos y días activos totales
+- **Seguimiento de objetivos** para metas de distancia semanal
+- **Gráficos interactivos** con capacidades de comparación semanal/mensual
+- **Vista de calendario mensual** que muestra el estado de actividad diaria
+- **Análisis de Esfuerzo Relativo**
+- **Informes de resumen mensual**
 
-### Activity Management
-- Filterable activity list
-- Individual activity records showing:
-  - Activity name
-  - Completion time
-  - Distance and elevation
-  - Route maps
-  - Year-over-year comparisons
+### Gestión de Actividades
+- Lista de actividades filtrable
+- Registros de actividad individual que muestran:
+  - Nombre de la actividad
+  - Hora de finalización
+  - Distancia y desnivel
+  - Mapas de ruta
+  - Comparaciones interanuales
 
-## Technical Implementation
+## Implementación Técnica
 
-### Data Pipeline
-- Python script using Strava API v3
-- Daily cron job for automatic data updates
-- Database schema with tables for:
-  - Activities
-  - Athlete
-  - Club
-  - Equipment
-  - Routes
-  - Segment
-  - Stream
-  - Load
+### Flujo de Datos
+- Script de Python que utiliza la API de Strava v3
+- Tarea programada diaria (cron job) para actualizaciones automáticas de datos
+- Esquema de base de datos con tablas para:
+  - Activities (Actividades)
+  - Athlete (Atleta)
+  - Club (Club)
+  - Equipment (Equipamiento)
+  - Routes (Rutas)
+  - Segment (Segmento)
+  - Stream (Streams)
+  - Load (Carga)
 
-### Setup Instructions
+### Instrucciones de Configuración
 
-1. **Clone the repository**
+1. **Clonar el repositorio**
    ```bash
    git clone https://github.com/hectorflores28/flask-strava-analytics-dashboard
    cd flask-strava-analytics-dashboard
    ```
 
-2. **Install dependencies**
+2. **Instalar dependencias**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Set up Strava API credentials**
-   - Register an application at [Strava API Settings](https://www.strava.com/settings/api)
-   - Update `config.py` with your client ID and secret
+3. **Configurar credenciales de la API de Strava**
+   - Registra una aplicación en [Strava API Settings](https://www.strava.com/settings/api)
+   - Actualiza `config.py` con tu ID de cliente y secreto
 
-4. **Initialize database**
+4. **Inicializar la base de datos**
    ```bash
    python init_db.py
    ```
 
-5. **Set up cron job for daily updates**
+5. **Configurar la tarea programada (cron job) para actualizaciones diarias**
    ```bash
-   # Add to crontab (crontab -e)
+   # Añadir al crontab (crontab -e)
    0 2 * * * cd /path/to/flask-strava-analytics-dashboard && python daily_update.py
    ```
 
-6. **Run the web application**
+6. **Ejecutar la aplicación web**
    ```bash
    python app.py
    ```
 
-### .env variables
-STRAVA_CLIENT_ID=your_strava_client_id
-STRAVA_CLIENT_SECRET=your_strava_client_secret
-SECRET_KEY=your_secret_key
+### Variables de entorno (.env)
+```
+STRAVA_CLIENT_ID=tu_strava_client_id
+STRAVA_CLIENT_SECRET=tu_strava_client_secret
+SECRET_KEY=tu_secret_key
+```
 
-### Project Structure
+### Estructura del Proyecto
 ```
 flask-strava-analytics-dashboard/
-├── StravaAPIv3.md          # API reference documentation
-├── config.py               # Configuration settings
-├── daily_update.py         # Daily data update script
-├── init_db.py              # Database initialization
-├── app.py                  # Web application
-├── models.py               # Database models
-├── requirements.txt        # Python dependencies
-└── templates/              # Web templates
-    ├── index.html          # Dashboard
-    ├── activities.html     # Activity list
-    └── monthly.html        # Monthly view
+├── StravaAPIv3.md          # Documentación de referencia de la API
+├── config.py               # Configuración
+├── daily_update.py         # Script de actualización diaria de datos
+├── init_db.py              # Inicialización de la base de datos
+├── app.py                  # Aplicación web
+├── models.py               # Modelos de base de datos
+├── requirements.txt        # Dependencias de Python
+└── templates/              # Plantillas web
+    ├── index.html          # Panel principal
+    ├── activities.html     # Lista de actividades
+    └── monthly.html        # Vista mensual
 ```
 
-## API Reference
-See [Strava_API_v3 Local Documentation](StravaAPIv3.md) in the root directory for complete Strava API v3 documentation and endpoint details.
+## Referencia de la API
+Consulta la [Documentación Local de Strava_API_v3](StravaAPIv3.md) en el directorio raíz para obtener la documentación completa de la API de Strava v3 y detalles de los endpoints.
 
-## Development
-This project uses:
+## Desarrollo
+Este proyecto utiliza:
 - Python 3.8+
-- Flask web framework
-- SQLite database (can be configured for other databases)
-- Strava API v3 with OAuth2 authentication
+- Framework web Flask
+- Base de datos SQLite (puede configurarse para otras bases de datos)
+- API de Strava v3 con autenticación OAuth2
 
-## Support
-For issues and questions, please refer to:
-- Strava API documentation: https://developers.strava.com/docs/reference/
-- Project issues page
+## Soporte
+Para problemas y preguntas, consulta:
+- Documentación de la API de Strava: https://developers.strava.com/docs/reference/
+- Página de issues del proyecto
 
 ---
 
-*This project is not affiliated with Strava, Inc. but uses their API according to their terms of service.*
+*Este proyecto no está afiliado con Strava, Inc. pero utiliza su API de acuerdo con sus términos de servicio.*
