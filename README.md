@@ -2,7 +2,7 @@
 
 Una aplicación web local completa para rastrear y analizar tus datos de actividad de Strava con actualizaciones automáticas diarias.
 
-[StravaAPIv3](assets/StravaAPI.jpeg)
+[StravaAPIv3](dashboard/assets/StravaAPI.jpeg)
 
 ## Funcionalidades
 
