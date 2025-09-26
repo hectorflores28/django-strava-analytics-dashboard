@@ -27,9 +27,9 @@
                     <tr>
                         <td>{{ week.week }}</td>
                         <td>{{ week.data.count }}</td>
-                        <td>{{ "%.2f"|format(week.data.distance) }}</td>
-                        <td>{{ "%.0f"|format(week.data.elevation) }}</td>
-                        <td>{{ "%.1f"|format(week.data.time) }}</td>
+                        <td>{{ week.data.distance|floatformat:2 }}</td>
+                        <td>{{ week.data.elevation|floatformat:0 }}</td>
+                        <td>{{ week.data.time|floatformat:1 }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -37,7 +37,7 @@
         </div>
         {% else %}
         <div class="alert alert-info" role="alert">
-            No weekly data available. <a href="{{ url_for('refresh_activities') }}">Refresh your data</a> to load activities.
+            No weekly data available. <a href="{% url 'refresh_activities' %}">Refresh your data</a> to load activities.
         </div>
         {% endif %}
     </div>

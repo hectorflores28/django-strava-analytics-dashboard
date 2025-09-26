@@ -61,6 +61,31 @@ class Activity(models.Model):
     # Campo para la racha (streak) u otros metadatos calculados
     calculated_day = models.DateField(db_index=True, help_text="Date part of start_date_local for daily grouping")
 
+    # Método de utilidad para la plantilla
+    def distance_km(self):
+        """Convierte la distancia (metros) a kilómetros."""
+        return self.distance / 1000.0 if self.distance else 0.0
+
+    def moving_time_formatted(self):
+        """Convierte el tiempo de movimiento (segundos) a HHh MMm SSs."""
+        seconds = self.moving_time or 0
+        hours = seconds // 3600
+        minutes = (seconds % 3600) // 60
+        seconds = seconds % 60
+        
+        # Formato compacto HHh MMm
+        if hours > 0:
+            return f"{int(hours)}h {int(minutes)}m"
+        elif minutes > 0:
+            return f"{int(minutes)}m {int(seconds)}s"
+        else:
+            return f"{int(seconds)}s"
+
+    def average_speed_kmh(self):
+        """Convierte la velocidad media (m/s) a km/h."""
+        # m/s * 3.6 = km/h
+        return self.average_speed * 3.6 if self.average_speed else 0.0
+
     class Meta:
         ordering = ['-start_date_local']
         verbose_name_plural = "Activities"

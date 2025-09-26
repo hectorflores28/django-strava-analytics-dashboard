@@ -7,6 +7,9 @@ from django.conf import settings
 from django.contrib import messages
 from .models import Athlete, Activity
 from django.db.models import Sum, Count, F, Max
+from django.db.models.functions import ExtractYear, ExtractWeek, ExtractDay
+from django.core.paginator import Paginator
+from collections import defaultdict
 from django.views.decorators.http import require_http_methods
 from django.db import transaction
 from django.utils import timezone # Usamos timezone de Django
@@ -56,6 +59,60 @@ def index(request):
 
     return render(request, 'index.html', context)
 
+def weekly_view(request):
+    """
+    Muestra el progreso semanal agregado de las actividades del atleta durante el último año.
+    """
+    athlete, _ = get_athlete_and_token(request)
+
+    if not athlete:
+        messages.warning(request, "Please log in to see your weekly progress.")
+        return redirect('login')
+
+    # 1. Definir el rango de tiempo (ej: último año)
+    one_year_ago = datetime.now() - timedelta(days=365)
+
+    # 2. Agregación Semanal Avanzada
+    # Usamos ExtractIsoWeek para obtener el número de semana (1-52/53) y ExtractYear para agrupar
+    weekly_summary = Activity.objects.filter(
+        athlete=athlete,
+        start_date_local__gte=one_year_ago
+    ).annotate(
+        # Creamos campos temporales para agrupar por Año y Semana ISO
+        year=ExtractYear('start_date_local'),
+        week=ExtractWeek('start_date_local')
+    ).values(
+        'year', 'week'
+    ).annotate(
+        # Calculamos las métricas agregadas
+        count=Count('id'),
+        distance=Sum(F('distance') / 1000.0), # Convertir a km en la DB
+        elevation=Sum('total_elevation_gain'),
+        time=Sum(F('moving_time') / 3600.0)    # Convertir a horas en la DB
+    ).order_by('-year', '-week') # Ordenar de la semana más reciente a la más antigua
+
+    # 3. Formatear los datos para la plantilla
+    weekly_data = []
+    for entry in weekly_summary:
+        # Formatear la clave de la semana como "YYYY - Week W"
+        week_label = f"{entry['year']} - Week {entry['week']}"
+        
+        weekly_data.append({
+            'week': week_label,
+            'data': {
+                'count': entry['count'],
+                'distance': entry['distance'] or 0.0,
+                'elevation': entry['elevation'] or 0.0,
+                'time': entry['time'] or 0.0,
+            }
+        })
+        
+    context = {
+        'athlete': athlete,
+        'weekly_data': weekly_data,
+    }
+
+    return render(request, 'weekly.html', context)
 
 def monthly_view(request):
     """Vista de resumen mensual."""
@@ -314,3 +371,113 @@ def refresh_activities_view(request):
         messages.error(request, f"An unexpected error occurred during sync: {e}")
         
     return redirect('index')
+
+def activities_list(request):
+    """
+    Lista de actividades con paginación y filtrado por tipo.
+    Miga la lógica de la función 'activities()' de app.py
+    """
+    athlete, access_token = get_athlete_and_token(request)
+
+    if not athlete:
+        messages.warning(request, "Please log in to see your activities.")
+        return redirect('login')
+
+    # 1. Obtener el filtro (Query Parameter)
+    selected_type = request.GET.get('type')
+
+    # 2. Construir el QuerySet base
+    activities_queryset = Activity.objects.filter(athlete=athlete)
+
+    # 3. Aplicar filtro
+    if selected_type:
+        activities_queryset = activities_queryset.filter(type=selected_type)
+
+    # Obtener todos los tipos únicos para el dropdown de filtrado
+    activity_types = Activity.objects.filter(athlete=athlete).values_list('type', flat=True).distinct().order_by('type')
+
+    # 4. Configurar Paginación (simulando la paginación de Flask-SQLAlchemy)
+    PAGINATOR_SIZE = 20
+    paginator = Paginator(activities_queryset, PAGINATOR_SIZE)
+    
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Adaptar los atributos de Paginator de Django al formato de Flask
+    # activities.items -> page_obj.object_list
+    # activities.has_next -> page_obj.has_next
+    # activities.next_num -> page_obj.next_page_number
+    # activities.iter_pages() -> Lo simularemos con un loop
+    
+    # 5. Generar un rango de páginas para la plantilla (opcional, pero mejora la UX)
+    def get_page_range(current_page, num_pages):
+        """Genera un rango de números de página para mostrar en el paginador."""
+        if num_pages <= 10:
+            return range(1, num_pages + 1)
+        
+        # Muestra 3 páginas alrededor de la actual + el inicio y el fin.
+        start = max(1, current_page - 2)
+        end = min(num_pages, current_page + 2)
+        
+        pages = list(range(start, end + 1))
+        
+        if 1 not in pages:
+            pages.insert(0, 1)
+            if 2 not in pages and 1 < start - 1:
+                pages.insert(1, None) # Placeholder para "..."
+
+        if num_pages not in pages:
+            if num_pages - 1 not in pages and num_pages > end + 1:
+                pages.append(None) # Placeholder para "..."
+            pages.append(num_pages)
+            
+        return pages
+
+    context = {
+        # Renombramos para usar un nombre de variable más claro en la plantilla
+        'page_obj': page_obj, 
+        'activities': page_obj.object_list,
+        'activity_types': activity_types,
+        'selected_type': selected_type,
+        'page_range': get_page_range(page_obj.number, paginator.num_pages),
+        'athlete': athlete,
+    }
+
+    return render(request, 'activities.html', context)
+
+def activity_detail(request, activity_id):
+    """
+    Muestra los detalles de una actividad específica y sus actividades similares para comparación.
+    """
+    athlete, _ = get_athlete_and_token(request)
+
+    if not athlete:
+        messages.warning(request, "Please log in to see activity details.")
+        return redirect('login')
+
+    # Obtener la actividad por ID, asegurando que pertenezca al atleta actual
+    # get_object_or_404 dispara un 404 si no existe o no pertenece al atleta
+    activity = get_object_or_404(
+        Activity, 
+        id=activity_id, 
+        athlete=athlete
+    )
+
+    # Lógica para actividades similares (mismo tipo, anteriores a la fecha actual)
+    similar_activities = Activity.objects.filter(
+        athlete=athlete,
+        type=activity.type,
+        start_date_local__lt=activity.start_date_local # Actividades con fecha anterior
+    ).exclude(
+        id=activity.id
+    ).order_by(
+        '-start_date_local' # Las más recientes primero
+    )[:5] # Limitar a las 5 más recientes para la comparación en la tabla
+
+    context = {
+        'athlete': athlete,
+        'activity': activity,
+        'similar_activities': similar_activities,
+    }
+    
+    return render(request, 'activity_detail.html', context)

@@ -40,7 +40,11 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 1 semana (ajustar según el ciclo de re
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '192.168.41.139',
+]
 
 # Application definition
 

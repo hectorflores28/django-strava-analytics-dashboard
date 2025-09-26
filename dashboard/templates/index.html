@@ -18,11 +18,11 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ today.count }}</p>
-                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ "%.2f"|format(today.distance) }} km</p>
+                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ today.distance }} km</p>
                     </div>
                     <div>
-                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ "%.0f"|format(today.elevation) }} m</p>
-                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ "%.1f"|format(today.time) }} h</p>
+                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ today.elevation }} m</p>
+                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ today.time }} h</p>
                     </div>
                 </div>
             </div>
@@ -37,11 +37,11 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ weekly.count }}</p>
-                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ "%.2f"|format(weekly.distance) }} km</p>
+                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ weekly.distance }} km</p>
                     </div>
                     <div>
-                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ "%.0f"|format(weekly.elevation) }} m</p>
-                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ "%.1f"|format(weekly.time) }} h</p>
+                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ weekly.elevation }} m</p>
+                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ weekly.time }} h</p>
                     </div>
                 </div>
             </div>
@@ -56,11 +56,11 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ monthly.count }}</p>
-                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ "%.2f"|format(monthly.distance) }} km</p>
+                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ monthly.distance }} km</p>
                     </div>
                     <div>
-                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ "%.0f"|format(monthly.elevation) }} m</p>
-                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ "%.1f"|format(monthly.time) }} h</p>
+                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ monthly.elevation }} m</p>
+                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ monthly.time }} h</p>
                     </div>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                             <small>{{ activity.start_date_local.strftime('%b %d') }}</small>
                         </div>
                         <p class="mb-1">
-                            {{ "%.2f"|format(activity.distance/1000) }} km •
+                            {{ activity.distance1000 }} km •
                             {{ (activity.moving_time//60) }} min •
                             {{ activity.type }}
                         </p>
