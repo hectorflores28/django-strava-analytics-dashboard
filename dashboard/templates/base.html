@@ -41,16 +41,16 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav">
-                    {% if 'access_token' in session %}
+                    {% if request.session.athlete_id %} 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('refresh_activities') }}">Refresh Data</a>
+                        <a class="nav-link" href="{% url 'refresh_activities' %}">Refresh Data</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('login') }}">Login with Strava</a>
+                        <a class="nav-link" href="{% url 'login' %}">Login with Strava</a>
                     </li>
                     {% endif %}
                 </ul>
