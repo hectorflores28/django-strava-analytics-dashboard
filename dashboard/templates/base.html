@@ -5,77 +5,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strava Analytics Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'strava.ico
+    ' %}">
 
-    <link rel="icon" type="image/x-icon" href="{% static 'strava.ico' %}"> 
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    
     <link rel="stylesheet" href="{% static 'css/strava.css' %}" /> 
-
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #FC5200;">
-        <div class="container">
-            {# CORREGIDO: Usamos la etiqueta {% url %} de Django #}
-            <a class="navbar-brand" href="{% url 'index' %}"><i class="bi bi-strava"></i> Strava Analytics</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    {# CORREGIDO: Todos los enlaces usan la sintaxis de Django #}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'activities' %}">Activities</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'weekly_view' %}">Weekly</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'monthly_view' %}">Monthly</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    {# CORREGIDO: La lógica condicional ahora comprueba si la variable 'athlete' existe en el contexto #}
-                    {% if athlete %} 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'refresh_activities' %}"><i class="bi bi-arrow-clockwise"></i> Refresh Data</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ athlete.profile_medium }}" alt="{{ athlete.firstname }}" class="rounded-circle" width="30" height="30">
-                            {{ athlete.firstname }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-light text-dark px-3" href="{% url 'login' %}">Login with Strava</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #FC5200;">
+
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">
+            <i class="bi bi-strava"></i>
+            Strava Analytics
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'activities' %}">
+                        Activities
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'weekly_view' %}">
+                        Weekly
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'monthly_view' %}">
+                        Monthly
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if athlete %} 
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'refresh_activities' %}">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        Refresh Data
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ athlete.profile_medium }}" alt="{{ athlete.firstname }}" class="rounded-circle" width="30" height="30">
+                        {{ athlete.firstname }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">
+                        <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link btn btn-light text-dark px-3" href="{% url 'login' %}">
+                        Login with Strava
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
-    </nav>
-
-    <div class="container mt-4">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        {% block content %}{% endblock %}
     </div>
+</nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% block content %}
+{% endblock %}
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

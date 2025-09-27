@@ -37,7 +37,11 @@
         </div>
         {% else %}
         <div class="alert alert-info" role="alert">
-            No weekly data available. <a href="{% url 'refresh_activities' %}">Refresh your data</a> to load activities.
+            No weekly data available. 
+            <a href="{% url 'refresh_activities' %}">
+                Refresh your data
+            </a> 
+            to load activities.
         </div>
         {% endif %}
     </div>

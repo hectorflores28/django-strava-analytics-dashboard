@@ -1,31 +1,42 @@
 {% extends "base.html" %}
-{% load static %} {# Es buena práctica cargar static para Chart.js si lo localizas #}
 
+{% load static %} 
 {% block content %}
 <div class="row">
     <div class="col-md-12">
         <h1>Dashboard</h1>
-        <p class="text-muted">Welcome, {{ athlete.firstname }}. Here is your Strava Analytics Dashboard.</p>
+        <p class="text-muted">
+            Welcome, {{ athlete.firstname }}. 
+            Here is your Strava Analytics Dashboard.
+        </p>
     </div>
 </div>
 
-{# Django usa las variables del contexto, no la sesión directamente en el template #}
 {% if is_authenticated %}
 <div class="row mt-4">
     <div class="col-md-6 col-lg-3 mb-4">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Today</h5>
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ today.count }}</p>
-                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ today.distance|floatformat:2 }} km</p>
-                    </div>
-                    <div>
-                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ today.elevation|floatformat:0 }} m</p>
-                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ today.time|floatformat:2 }} h</p>
-                    </div>
-                </div>
+                <div class="d-flex justify-content-between"><div>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-activity"></i>
+                        Activities: {{ today.count }}
+                    </p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-signpost"></i>
+                        Distance: {{ today.distance|floatformat:2 }} km
+                    </p>
+                </div><div>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-mountain"></i>
+                        Elevation: {{ today.elevation|floatformat:0 }} m
+                    </p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-clock"></i>
+                        Time: {{ today.time|floatformat:2 }} h
+                    </p>
+                </div></div>
             </div>
         </div>
     </div>
@@ -34,16 +45,24 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">This Week</h5>
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ this_week.count }}</p>
-                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ this_week.distance|floatformat:2 }} km</p>
-                    </div>
-                    <div>
-                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ this_week.elevation|floatformat:0 }} m</p>
-                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ this_week.time|floatformat:2 }} h</p>
-                    </div>
-                </div>
+                <div class="d-flex justify-content-between"><div>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-activity"></i>
+                        Activities: {{ this_week.count }}</p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-signpost"></i>
+                        Distance: {{ this_week.distance|floatformat:2 }} km
+                    </p>
+                </div><div>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-mountain"></i>
+                        Elevation: {{ this_week.elevation|floatformat:0 }} m
+                    </p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-clock"></i>
+                        Time: {{ this_week.time|floatformat:2 }} h
+                    </p>
+                </div></div>
             </div>
         </div>
     </div>
@@ -52,16 +71,26 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">This Month</h5>
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ this_month.count }}</p>
-                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ this_month.distance|floatformat:2 }} km</p>
-                    </div>
-                    <div>
-                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ this_month.elevation|floatformat:0 }} m</p>
-                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ this_month.time|floatformat:2 }} h</p>
-                    </div>
+                <div class="d-flex justify-content-between"><div>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-activity"></i>
+                        Activities: {{ this_month.count }}
+                    </p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-signpost"></i>
+                        Distance: {{ this_month.distance|floatformat:2 }} km
+                    </p>
                 </div>
+                <div>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-mountain"></i>
+                        Elevation: {{ this_month.elevation|floatformat:0 }} m
+                    </p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-clock"></i>
+                        Time: {{ this_month.time|floatformat:2 }} h
+                    </p>
+                </div></div>
             </div>
         </div>
     </div>
@@ -70,12 +99,23 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Activity Streak</h5>
-                {% if streak %} {# La lógica para 'streak' aún debe ser implementada en la vista #}
-                <p class="card-text mb-0"><i class="bi bi-fire"></i> Current: {{ streak.current_streak }} days</p>
-                <p class="card-text mb-0"><i class="bi bi-trophy"></i> Longest: {{ streak.longest_streak }} days</p>
-                <p class="card-text mb-0"><i class="bi bi-calendar"></i> Total: {{ streak.total_days }} days</p>
-                {% else %}
-                <p class="card-text">No streak data available yet.</p>
+                {% if streak %} 
+                    <p class="card-text mb-0">
+                        <i class="bi bi-fire"></i>
+                        Current: {{ streak.current_streak }} days
+                    </p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-trophy"></i>
+                        Longest: {{ streak.longest_streak }} days
+                    </p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-calendar"></i>
+                        Total: {{ streak.total_days }} days
+                    </p>
+                    {% else %}
+                    <p class="card-text">
+                        No streak data available yet.
+                    </p>
                 {% endif %}
             </div>
         </div>
@@ -87,18 +127,15 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Recent Activities</h5>
-                {# La lógica de consulta fue movida a la vista. Ahora solo iteramos. #}
                 {% if recent_activities %}
                 <div class="list-group">
                     {% for activity in recent_activities %}
-                    {# Sintaxis de URL de Django: {% url 'nombre_de_la_url' parametro %} #}
                     <a href="{% url 'activity_detail' activity.id %}" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">{{ activity.name }}</h6>
                             <small>{{ activity.start_date_local|date:"M d" }}</small>
                         </div>
                         <p class="mb-1">
-                            {# Usamos filtros de Django para formatear los datos del modelo #}
                             {{ activity.get_distance_km|floatformat:2 }} km •
                             {{ activity.get_moving_time_minutes }} min •
                             {{ activity.type }}
@@ -107,7 +144,9 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="card-text">No activities found</p>
+                <p class="card-text">
+                    No activities found
+                </p>
                 {% endif %}
             </div>
         </div>
@@ -122,10 +161,7 @@
         </div>
     </div>
 </div>
-
-{# Incluimos Chart.js. Idealmente desde un archivo estático local #}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('activityChart').getContext('2d');
@@ -162,7 +198,6 @@
         }
     });
 </script>
-
 {% else %}
 <div class="row mt-4">
     <div class="col-md-12 text-center">
@@ -172,7 +207,8 @@
             <hr class="my-4">
             <p>Connect your Strava account to get started.</p>
             <a class="btn btn-primary btn-lg" style="background-color: #FC5200; border-color: #FC5200;" href="{% url 'login' %}" role="button">
-                <i class="bi bi-strava"></i> Connect with Strava
+                <i class="bi bi-strava"></i>
+                Connect with Strava
             </a>
         </div>
     </div>
