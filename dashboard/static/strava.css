@@ -33,10 +33,17 @@ body {
 .nav-link {
     color: #fff !important;
     font-weight: 500;
+    transition: color 0.3s ease, background-color 0.3s ease; 
 }
+
+.navbar-nav .nav-item:hover {
+    background-color: var(--strava-light) !important; 
+}
+
 
 .nav-link:hover {
     color: var(--strava-orange) !important;
+    background-color: var(--strava-light) !important;
 }
 
 /* Buttons */
