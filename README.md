@@ -47,8 +47,8 @@ Una aplicación web local completa para rastrear y analizar tus datos de activid
 
 1. **Clonar el repositorio**
    ```bash
-   git clone https://github.com/hectorflores28/flask-strava-analytics-dashboard
-   cd flask-strava-analytics-dashboard
+   git clone https://github.com/hectorflores28/django-strava-analytics-dashboard
+   cd django-strava-analytics-dashboard
    ```
 
 2. **Instalar dependencias**
@@ -68,7 +68,7 @@ Una aplicación web local completa para rastrear y analizar tus datos de activid
 5. **Configurar la tarea programada (cron job) para actualizaciones diarias**
    ```bash
    # Añadir al crontab (crontab -e)
-   0 2 * * * cd /path/to/flask-strava-analytics-dashboard && python daily_update.py
+   0 2 * * * cd /path/to/django-strava-analytics-dashboard && python daily_update.py
    ```
 
 6. **Ejecutar la aplicación web**
@@ -85,7 +85,7 @@ SECRET_KEY=tu_secret_key
 
 ### Estructura del Proyecto
 ```
-flask-strava-analytics-dashboard/
+django-strava-analytics-dashboard/
 ├── StravaAPIv3.md          # Documentación de referencia de la API
 ├── config.py               # Configuración
 ├── daily_update.py         # Script de actualización diaria de datos
@@ -105,7 +105,7 @@ Consulta la [Documentación StravaAPIv3](public/strava_api_v3_documentation.md) 
 ## Desarrollo
 Este proyecto utiliza:
 - Python 3.8+
-- Framework web Flask
+- Framework web django
 - Base de datos SQLite (puede configurarse para otras bases de datos)
 - API de Strava v3 con autenticación OAuth2
 
