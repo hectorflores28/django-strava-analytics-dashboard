@@ -1,16 +1,17 @@
 {% extends "base.html" %}
+{% load static %} {# Es buena práctica cargar static para Chart.js si lo localizas #}
 
 {% block content %}
 <div class="row">
     <div class="col-md-12">
         <h1>Dashboard</h1>
-        <p class="text-muted">Welcome to your Strava Analytics Dashboard</p>
+        <p class="text-muted">Welcome, {{ athlete.firstname }}. Here is your Strava Analytics Dashboard.</p>
     </div>
 </div>
 
-{% if 'access_token' in session %}
+{# Django usa las variables del contexto, no la sesión directamente en el template #}
+{% if is_authenticated %}
 <div class="row mt-4">
-    <!-- Today's Summary -->
     <div class="col-md-6 col-lg-3 mb-4">
         <div class="card">
             <div class="card-body">
@@ -18,66 +19,63 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ today.count }}</p>
-                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ today.distance }} km</p>
+                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ today.distance|floatformat:2 }} km</p>
                     </div>
                     <div>
-                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ today.elevation }} m</p>
-                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ today.time }} h</p>
+                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ today.elevation|floatformat:0 }} m</p>
+                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ today.time|floatformat:2 }} h</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Weekly Summary -->
     <div class="col-md-6 col-lg-3 mb-4">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">This Week</h5>
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ weekly.count }}</p>
-                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ weekly.distance }} km</p>
+                        <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ this_week.count }}</p>
+                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ this_week.distance|floatformat:2 }} km</p>
                     </div>
                     <div>
-                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ weekly.elevation }} m</p>
-                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ weekly.time }} h</p>
+                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ this_week.elevation|floatformat:0 }} m</p>
+                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ this_week.time|floatformat:2 }} h</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Monthly Summary -->
     <div class="col-md-6 col-lg-3 mb-4">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">This Month</h5>
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ monthly.count }}</p>
-                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ monthly.distance }} km</p>
+                        <p class="card-text mb-0"><i class="bi bi-activity"></i> Activities: {{ this_month.count }}</p>
+                        <p class="card-text mb-0"><i class="bi bi-signpost"></i> Distance: {{ this_month.distance|floatformat:2 }} km</p>
                     </div>
                     <div>
-                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ monthly.elevation }} m</p>
-                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ monthly.time }} h</p>
+                        <p class="card-text mb-0"><i class="bi bi-mountain"></i> Elevation: {{ this_month.elevation|floatformat:0 }} m</p>
+                        <p class="card-text mb-0"><i class="bi bi-clock"></i> Time: {{ this_month.time|floatformat:2 }} h</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Streak Info -->
     <div class="col-md-6 col-lg-3 mb-4">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Activity Streak</h5>
-                {% if streak %}
+                {% if streak %} {# La lógica para 'streak' aún debe ser implementada en la vista #}
                 <p class="card-text mb-0"><i class="bi bi-fire"></i> Current: {{ streak.current_streak }} days</p>
                 <p class="card-text mb-0"><i class="bi bi-trophy"></i> Longest: {{ streak.longest_streak }} days</p>
                 <p class="card-text mb-0"><i class="bi bi-calendar"></i> Total: {{ streak.total_days }} days</p>
                 {% else %}
-                <p class="card-text">No streak data available</p>
+                <p class="card-text">No streak data available yet.</p>
                 {% endif %}
             </div>
         </div>
@@ -89,18 +87,20 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Recent Activities</h5>
-                {% set recent_activities = Activity.query.filter_by(athlete_id=session.athlete_id).order_by(desc(Activity.start_date)).limit(5).all() %}
+                {# La lógica de consulta fue movida a la vista. Ahora solo iteramos. #}
                 {% if recent_activities %}
                 <div class="list-group">
                     {% for activity in recent_activities %}
-                    <a href="{{ url_for('activity_detail', activity_id=activity.id) }}" class="list-group-item list-group-item-action">
+                    {# Sintaxis de URL de Django: {% url 'nombre_de_la_url' parametro %} #}
+                    <a href="{% url 'activity_detail' activity.id %}" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">{{ activity.name }}</h6>
-                            <small>{{ activity.start_date_local.strftime('%b %d') }}</small>
+                            <small>{{ activity.start_date_local|date:"M d" }}</small>
                         </div>
                         <p class="mb-1">
-                            {{ activity.distance1000 }} km •
-                            {{ (activity.moving_time//60) }} min •
+                            {# Usamos filtros de Django para formatear los datos del modelo #}
+                            {{ activity.get_distance_km|floatformat:2 }} km •
+                            {{ activity.get_moving_time_minutes }} min •
                             {{ activity.type }}
                         </p>
                     </a>
@@ -123,38 +123,57 @@
     </div>
 </div>
 
+{# Incluimos Chart.js. Idealmente desde un archivo estático local #}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-    // Activity type distribution chart
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('activityChart').getContext('2d');
+        
+        // Inyectamos los datos del contexto de Django al script de forma segura
+        const chartLabels = {{ chart_labels|safe }};
+        const chartData = {{ chart_data|safe }};
 
-        // This would ideally come from the server
-        // For now, we'll use a placeholder
-        const activityChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Run', 'Ride', 'Swim', 'Other'],
-                datasets: [{
-                    data: [40, 35, 15, 10],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
+        if (chartData.length > 0) {
+            const activityChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: ['#FC5200', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: false,
+                            text: 'Activity Distribution by Type'
+                        }
+                    }
+                }
+            });
+        }
     });
 </script>
+
 {% else %}
 <div class="row mt-4">
     <div class="col-md-12 text-center">
-        <div class="jumbotron">
+        <div class="jumbotron bg-light p-5 rounded-lg">
             <h1 class="display-4">Strava Analytics Dashboard</h1>
-            <p class="lead">Track your fitness activities and analyze your performance</p>
+            <p class="lead">Track your fitness activities and analyze your performance.</p>
             <hr class="my-4">
-            <p>Connect your Strava account to get started</p>
-            <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">Connect with Strava</a>
+            <p>Connect your Strava account to get started.</p>
+            <a class="btn btn-primary btn-lg" style="background-color: #FC5200; border-color: #FC5200;" href="{% url 'login' %}" role="button">
+                <i class="bi bi-strava"></i> Connect with Strava
+            </a>
         </div>
     </div>
 </div>
