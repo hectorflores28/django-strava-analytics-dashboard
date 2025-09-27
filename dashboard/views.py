@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.conf import settings
 from django.contrib import messages
+import json 
 from .models import Athlete, Activity
 from django.db.models import Sum, Count, F, Max
 from django.db.models.functions import ExtractYear, ExtractWeek, ExtractDay
@@ -21,41 +22,52 @@ def index(request):
     athlete, access_token = get_athlete_and_token(request)
 
     if not athlete:
-        # Usar la plantilla de bienvenida si no está autenticado
         return render(request, 'index.html', {'is_authenticated': False})
 
     # 1. Calcular Fechas Clave
-    today = localdate() # Fecha local para las comparaciones
-    start_of_week = today - timedelta(days=today.weekday()) # Lunes
+    today = timezone.localdate() # Usar timezone.localdate() es la mejor práctica en Django
+    start_of_week = today - timedelta(days=today.weekday())
     start_of_month = today.replace(day=1)
     
-    # 2. Agregación Base (DRY - Don't Repeat Yourself)
+    # 2. Agregación Base
     def get_summary(start_date, end_date=today + timedelta(days=1)):
-        """Función auxiliar para obtener métricas agregadas."""
         summary = Activity.objects.filter(
             athlete=athlete,
             start_date_local__gte=start_date,
             start_date_local__lt=end_date
         ).aggregate(
             count=Count('id'),
-            distance=Sum('distance') / 1000.0,  # km
-            elevation=Sum('total_elevation_gain'), # m
-            time=Sum('moving_time') / 3600.0, # horas
+            distance=Sum('distance') / 1000.0,
+            elevation=Sum('total_elevation_gain'),
+            time=Sum('moving_time') / 3600.0,
         )
-        # Manejar None si no hay actividades
-        return {k: v if v is not None else 0 for k, v in summary.items()}
+        return {k: round(v, 2) if v is not None else 0 for k, v in summary.items()}
 
-    # 3. Obtener Resúmenes
+    # 3. Lógica para Actividades Recientes (movida desde el template)
+    recent_activities = Activity.objects.filter(athlete=athlete).order_by('-start_date_local')[:5]
+
+    # 4. Lógica para Gráfico de Distribución por Tipo de Actividad
+    activity_distribution = Activity.objects.filter(
+        athlete=athlete
+    ).values('type').annotate(
+        count=Count('id')
+    ).order_by('-count')
+
+    chart_labels = [item['type'] for item in activity_distribution]
+    chart_data = [item['count'] for item in activity_distribution]
+
+    # 5. Construir el Contexto Final
     context = {
         'today': get_summary(today),
         'this_week': get_summary(start_of_week),
         'this_month': get_summary(start_of_month),
         'athlete': athlete,
-        'is_authenticated': True
+        'is_authenticated': True,
+        'recent_activities': recent_activities,
+        # Pasamos los datos del gráfico como JSON para ser usados en JavaScript
+        'chart_labels': json.dumps(chart_labels),
+        'chart_data': json.dumps(chart_data),
     }
-    
-    # [TODO: Implementar lógica de Rachas (Streaks) aquí]
-    # [TODO: Implementar lógica de Distribución por Tipo de Actividad para Chart.js aquí]
 
     return render(request, 'index.html', context)
 
