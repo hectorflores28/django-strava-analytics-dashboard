@@ -40,7 +40,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {# La vista 'monthly_view' pasa una lista de diccionarios llamada 'monthly_data' #}
                     {% for item in monthly_data %}
                     <tr>
                         <td><strong>
@@ -65,7 +64,7 @@
         </div>
 
         {% else %}
-        
+
         <div class="alert alert-info" role="alert">
             <h4 class="alert-heading">No Data Yet!</h4>
             <p>
