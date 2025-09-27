@@ -16,7 +16,7 @@ env/
 # Archivos de configuración y claves sensibles (no deben subirse)
 instance/
 config.py
-.flaskenv
+.djangoenv
 .vscode/
 
 # Logs y archivos de depuración
@@ -29,6 +29,3 @@ config.py
 # Archivos de sistema
 .DS_Store
 Thumbs.db
-
-# Archivos de Texto
-FLASK_STAVA_API_V3.txt

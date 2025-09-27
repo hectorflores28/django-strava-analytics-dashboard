@@ -7,7 +7,7 @@ urlpatterns = [
     path('callback/', views.strava_callback, name='strava_callback'),
     path('logout/', views.logout_view, name='logout'),
     
-    # Vistas Principales (Asumiendo que las vistas principales de Flask migran aquí)
+    # Vistas Principales (Asumiendo que las vistas principales de Django migran aquí)
     path('', views.index, name='index'), # Dashboard
     path('activities/', views.activities_list, name='activities'),
     path('activities/<int:activity_id>/', views.activity_detail, name='activity_detail'),

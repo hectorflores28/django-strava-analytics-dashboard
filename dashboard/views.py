@@ -147,7 +147,6 @@ def monthly_view(request):
         time=Sum(F('moving_time') / 3600.0)
     ).order_by('-month_key')
 
-    # Renombrar para que coincida con la plantilla de Flask
     monthly_data = [{
         'month': item['month_key'],
         'data': {k: item[k] for k in ['count', 'distance', 'elevation', 'time']}
@@ -408,14 +407,12 @@ def activities_list(request):
     # Obtener todos los tipos únicos para el dropdown de filtrado
     activity_types = Activity.objects.filter(athlete=athlete).values_list('type', flat=True).distinct().order_by('type')
 
-    # 4. Configurar Paginación (simulando la paginación de Flask-SQLAlchemy)
     PAGINATOR_SIZE = 20
     paginator = Paginator(activities_queryset, PAGINATOR_SIZE)
     
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    # Adaptar los atributos de Paginator de Django al formato de Flask
     # activities.items -> page_obj.object_list
     # activities.has_next -> page_obj.has_next
     # activities.next_num -> page_obj.next_page_number
