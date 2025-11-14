@@ -25,7 +25,7 @@ def index(request):
         return render(request, 'index.html', {'is_authenticated': False})
 
     # 1. Calcular Fechas Clave
-    today = timezone.localdate() # Usar timezone.localdate() es la mejor práctica en Django
+    today = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
     start_of_week = today - timedelta(days=today.weekday())
     start_of_month = today.replace(day=1)
     
