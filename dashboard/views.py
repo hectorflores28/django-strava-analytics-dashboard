@@ -137,7 +137,7 @@ def monthly_view(request):
     # Usamos F() expressions y anotaciones para agrupar y agregar en la DB
     monthly_data_raw = Activity.objects.filter(
         athlete=athlete,
-        start_date_local__gte=localdate() - timedelta(days=365)
+        start_date_local__gte=timezone.now() - timedelta(days=365)
     ).extra(
         select={'month_key': "strftime('%%Y-%%m', start_date_local)"} # SQLite formatting
     ).values('month_key').annotate(
