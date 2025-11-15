@@ -2,7 +2,8 @@
 
 Una aplicación web local completa para rastrear y analizar tus datos de actividad de Strava con actualizaciones automáticas diarias.
 
-![Aplicacion](public/screenshot.png)
+![Home](public/screenshot.png)
+![Logged-In-Dashboard](public/screenshot_dashboard.png)
 
 
 ## Funcionalidades
