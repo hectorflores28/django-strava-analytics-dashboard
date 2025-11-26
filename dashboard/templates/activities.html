@@ -38,15 +38,14 @@
                     {{ activity.type }}
                 </span>
                 <span class="badge bg-secondary">
-                    {{ activity.distance/1000|floatformat:2 }} km
-                    {{ activity.distance|add:0|div:1000|floatformat:2 }} km
+                    {{ activity.distance_km|floatformat:2 }} km
                 </span>
                 <span class="badge bg-info">
-                    {{ (activity.moving_time//60) }} min
+                    {{ activity.moving_time_formatted }}
                 </span>
                 {% if activity.total_elevation_gain %}
-                <span class="badge bg-success">
-                    {{ "%.0f"|format(activity.total_elevation_gain) }} m elevation
+                    <span class="badge bg-success">
+                        {{ activity.total_elevation_gain|floatformat:0 }} m elevation
                 </span>
     {% endif %}
             </p>
@@ -99,33 +98,21 @@
                 </li>
             {% endif %}
 
-            {% for page_num in activities.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-                {% if page_num %}
-                    {% if activities.page == page_num %}
-                    <li class="page-item active">
-                        <span class="page-link">
-                            {{ page_num }}
-                        </span>
-                    </li>
-                    {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="{% url 'activities', page=page_num, type=selected_type %}">
-                            {{ page_num }}
-                        </a>
-                    </li>
-                    {% endif %}
+            {% for num in page_range %}
+                {% if num is None %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                {% elif page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
                 {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link">
-                            …
-                        </span>
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'activities' %}?page={{ num }}{% if selected_type %}&type={{ selected_type }}{% endif %}">{{ num }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
 
-            {% if activities.has_next %}
+            {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="{% url 'activities', page=activities.next_num, type=selected_type %}">
+                <a class="page-link" href="{% url 'activities' %}?page={{ page_obj.next_page_number }}{% if selected_type %}&type={{ selected_type }}{% endif %}">
                     Next
                 </a>
             </li>

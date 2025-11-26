@@ -1,86 +1,86 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="row">
-    <div class="col-md-12">
-        <h1 class="mb-4">Monthly Summary</h1>
-        <p class="text-muted">
-            A month-by-month breakdown of your activities over the last year.
-        </p>
-    </div>
+  <div class="col-md-12">
+    <h1 class="mb-4">Monthly Summary</h1>
+    <p class="text-muted">
+      A month-by-month breakdown of your activities over the last year.
+    </p>
+  </div>
 </div>
 
 <div class="row mt-4">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
         {% if monthly_data %}
         <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col">Month</th>
-                        <th scope="col" class="text-center">
-                            <i class="bi bi-activity"></i>
-                            Activities
-                        </th>
-                        <th scope="col" class="text-end">
-                            <i class="bi bi-signpost"></i>
-                            Distance (km)
-                        </th>
-                        <th scope="col" class="text-end">
-                            <i class="bi bi-mountain"></i>
-                            Elevation (m)
-                        </th>
-                        <th scope="col" class="text-end">
-                            <i class="bi bi-clock"></i>
-                            Time (h)
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in monthly_data %}
-                    <tr>
-                        <td><strong>
-                            {{ item.month }}
-                        </strong></td>
-                        <td class="text-center">
-                            {{ item.data.count }}
-                        </td>
-                        <td class="text-end">
-                            {{ item.data.distance|floatformat:2 }}
-                        </td>
-                        <td class="text-end">
-                            {{ item.data.elevation|floatformat:0 }}
-                        </td>
-                        <td class="text-end">
-                            {{ item.data.time|floatformat:2 }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">Month</th>
+                <th scope="col" class="text-center">
+                  <i class="bi bi-activity"></i>
+                  Activities
+                </th>
+                <th scope="col" class="text-end">
+                  <i class="bi bi-signpost"></i>
+                  Distance (km)
+                </th>
+                <th scope="col" class="text-end">
+                  <i class="bi bi-mountain"></i>
+                  Elevation (m)
+                </th>
+                <th scope="col" class="text-end">
+                  <i class="bi bi-clock"></i>
+                  Time (h)
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in monthly_data %}
+              <tr>
+                <td><strong>{{ item.month }}</strong></td>
+                <td class="text-center">
+                  <span class="badge bg-primary">{{ item.data.count }}</span>
+                </td>
+                <td class="text-end">
+                  <span class="badge bg-secondary"
+                    >{{ item.data.distance|floatformat:2 }}</span
+                  >
+                </td>
+                <td class="text-end">
+                  <span class="badge bg-success"
+                    >{{ item.data.elevation|floatformat:0 }}</span
+                  >
+                </td>
+                <td class="text-end">
+                  <span class="badge bg-info"
+                    >{{ item.data.time|floatformat:2 }}</span
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
 
         {% else %}
 
         <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading">No Data Yet!</h4>
-            <p>
-                There is no monthly activity data to display. 
-                Once you sync your activities,
-                your monthly summary will appear here.
-            </p>
-            <hr>
-            <p class="mb-0">
-                You can perform a manual sync by clicking 'Refresh Data' in the navigation bar.
-            </p>
+          <h4 class="alert-heading">No Data Yet!</h4>
+          <p>
+            There is no monthly activity data to display. Once you sync your
+            activities, your monthly summary will appear here.
+          </p>
+          <hr />
+          <p class="mb-0">
+            You can perform a manual sync by clicking 'Refresh Data' in the
+            navigation bar.
+          </p>
         </div>
         {% endif %}
-
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
