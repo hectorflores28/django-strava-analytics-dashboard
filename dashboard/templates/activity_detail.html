@@ -109,8 +109,7 @@
               <tr class="table-primary">
                 <td>
                   <strong
-                    >{{ activity.start_date_local.strftime('%Y-%m-%d')
-                    }}</strong
+                    >{{ activity.start_date_local|date:"Y-m-d" }}</strong
                   >
                 </td>
                 <td>
