@@ -53,14 +53,18 @@
     <div class="card mb-4">
       <div class="card-header">Map</div>
       <div class="card-body">
-        <p>Map visualization for the route goes here.</p>
-        {% if activity.map_polyline %}
-        <small>Polyline data available.</small>
-        {% else %}
-        <small class="text-danger">
-          No detailed map data available for this activity.
-        </small>
-        {% endif %}
+        <div id="activityMap" style="height: 300px; width: 100%;"></div>
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              var map = L.map('activityMap').setView([19.4326, -99.1332], 13); // CDMX por defecto
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: '© OpenStreetMap contributors'
+              }).addTo(map);
+            });
+            </script>
       </div>
     </div>
   </div>
@@ -104,7 +108,10 @@
 
               <tr class="table-primary">
                 <td>
-                  <strong>{{ activity.start_date_local|date:"Y-m-d" }}<strong>
+                  <strong
+                    >{{ activity.start_date_local.strftime('%Y-%m-%d')
+                    }}</strong
+                  >
                 </td>
                 <td>
                   <strong>{{ activity.distance_km|floatformat:2 }}</strong>
