@@ -4,7 +4,10 @@ Una aplicación web local completa para rastrear y analizar tus datos de activid
 
 ![Home](public/screenshot.png)
 ![Logged-In-Dashboard](public/screenshot_dashboard.png)
-
+![Activities](public/screenshot_dashboard.png)
+![Activity-Detail](public/screenshot_activity_details.png)
+![Weekly](public/screenshot_weekly.png)
+![Monthly](public/screenshot_monthly.png)
 
 ## Funcionalidades
 
