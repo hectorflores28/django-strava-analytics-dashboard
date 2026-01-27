@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <h1>Dashboard</h1>
         <p class="text-muted">
-            Welcome, {{ athlete.firstname }}. 
+            Welcome, {{ athlete.firstname|default:"User" }}. 
             Here is your Strava Analytics Dashboard.
         </p>
     </div>
