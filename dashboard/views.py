@@ -57,13 +57,26 @@ def index(request):
     chart_data = [item['count'] for item in activity_distribution]
 
     # 5. Construir el Contexto Final
+    today_stats = get_summary(today)
+    this_week_stats = get_summary(start_of_week)
+    this_month_stats = get_summary(start_of_month)
+
+    # Goal Logic (Default 150km)
+    monthly_goal = 150.0
+    current_distance = this_month_stats.get('distance', 0)
+    goal_percentage = min(100, (current_distance / monthly_goal * 100)) if monthly_goal > 0 else 0
+
     context = {
-        'today': get_summary(today),
-        'this_week': get_summary(start_of_week),
-        'this_month': get_summary(start_of_month),
+        'today': today_stats,
+        'this_week': this_week_stats,
+        'this_month': this_month_stats,
         'athlete': athlete,
         'is_authenticated': True,
         'recent_activities': recent_activities,
+        # Goal Data
+        'meta_mensual': monthly_goal,
+        'avance_mensual': current_distance,
+        'avance_porcentaje': goal_percentage,
         # Pasamos los datos del gráfico como JSON para ser usados en JavaScript
         'chart_labels': json.dumps(chart_labels),
         'chart_data': json.dumps(chart_data),
