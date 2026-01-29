@@ -3,7 +3,7 @@ CronJobs:
 
 # Ejemplo de entrada en crontab -e (se ejecuta a las 2:00 AM todos los días)
 # Asegúrate de usar la ruta completa al entorno y manage.py
-0 2 * * * /path/to/venv/bin/python /path/to/project/manage.py sync_strava_data >> /path/to/project/logs/sync.log 2>&1
+0 2 * * * /path/to/venv/bin/python /path/to/project/manage.py sync_strava_data >> /path/to/project/logs/sync_strava_data.log 2>&1
 
 """
 # Crear la estructura de directorios: dashboard/management/commands/

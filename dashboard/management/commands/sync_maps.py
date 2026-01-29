@@ -1,3 +1,11 @@
+"""
+CronJobs:
+
+# Ejemplo de entrada en crontab -e (se ejecuta a las 3:00 AM todos los días)
+# Asegúrate de usar la ruta completa al entorno y manage.py
+0 3 * * * /path/to/venv/bin/python /path/to/project/manage.py sync_maps >> /path/to/project/logs/sync_maps.log 2>&1
+
+"""
 from django.core.management.base import BaseCommand
 from dashboard.models import Activity, Athlete
 from dashboard.views import get_session, refresh_strava_token

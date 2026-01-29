@@ -72,7 +72,8 @@ Una aplicación web local completa para rastrear y analizar tus datos de activid
 5. **Configurar la tarea programada (cron job) para actualizaciones diarias**
    ```bash
    # Añadir al crontab (crontab -e)
-   0 2 * * * cd /path/to/django-strava-analytics-dashboard && python daily_update.py
+   0 2 * * * cd /path/to/django-strava-analytics-dashboard && python sync_data_strava.py
+   0 3 * * * cd /path/to/django-strava-analytics-dashboard && python sync_maps.py
    ```
 
 6. **Ejecutar la aplicación web**
