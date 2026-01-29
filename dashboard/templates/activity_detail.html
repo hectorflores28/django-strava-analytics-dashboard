@@ -56,16 +56,41 @@
         <div id="activityMap" style="height: 300px; width: 100%; border-radius: 8px;"></div>
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
             <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-            <!-- Polyline Decoder -->
-            <script src="https://cdn.jsdelivr.net/npm/@mapbox/polyline@1.2.1/src/polyline.min.js"></script>
             <script>
+            // Función para decodificar polilíneas de Google (usadas por Strava)
+            function decodePolyline(encoded) {
+                if (!encoded) return [];
+                var points = [];
+                var index = 0, len = encoded.length;
+                var lat = 0, lng = 0;
+                while (index < len) {
+                    var b, shift = 0, result = 0;
+                    do {
+                        b = encoded.charCodeAt(index++) - 63;
+                        result |= (b & 0x1f) << shift;
+                        shift += 5;
+                    } while (b >= 0x20);
+                    var dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                    lat += dlat;
+                    shift = 0;
+                    result = 0;
+                    do {
+                        b = encoded.charCodeAt(index++) - 63;
+                        result |= (b & 0x1f) << shift;
+                        shift += 5;
+                    } while (b >= 0x20);
+                    var dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                    lng += dlng;
+                    points.push([lat / 1e5, lng / 1e5]);
+                }
+                return points;
+            }
+
             document.addEventListener('DOMContentLoaded', function() {
               var encodedPolyline = "{{ activity.summary_polyline|safe }}";
               
               if (encodedPolyline && encodedPolyline !== "None" && encodedPolyline !== "") {
-                // Decode the polyline
-                // The polyline library from Mapbox provides polyline.decode()
-                var coordinates = polyline.decode(encodedPolyline);
+                var coordinates = decodePolyline(encodedPolyline);
                 
                 var map = L.map('activityMap');
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -80,11 +105,12 @@
                   lineJoin: 'round'
                 }).addTo(map);
 
-                // Zoom the map to the polyline
                 map.fitBounds(route.getBounds(), { padding: [20, 20] });
               } else {
-                // Default view if no polyline
-                var start_latlng = {{ activity.start_latlng|safe|default:"[19.4326, -99.1332]" }};
+                var start_latlng = {{ activity.start_latlng|safe|default:"null" }};
+                if (!start_latlng) {
+                    start_latlng = [19.4326, -99.1332]; // Default CDMX
+                }
                 var map = L.map('activityMap').setView(start_latlng, 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                   maxZoom: 18,
