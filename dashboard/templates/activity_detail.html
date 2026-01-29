@@ -53,16 +53,48 @@
     <div class="card mb-4">
       <div class="card-header">Map</div>
       <div class="card-body">
-        <div id="activityMap" style="height: 300px; width: 100%;"></div>
+        <div id="activityMap" style="height: 300px; width: 100%; border-radius: 8px;"></div>
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
             <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+            <!-- Polyline Decoder -->
+            <script src="https://cdn.jsdelivr.net/npm/@mapbox/polyline@1.2.1/src/polyline.min.js"></script>
             <script>
             document.addEventListener('DOMContentLoaded', function() {
-              var map = L.map('activityMap').setView([19.4326, -99.1332], 13); // CDMX por defecto
-              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: '© OpenStreetMap contributors'
-              }).addTo(map);
+              var encodedPolyline = "{{ activity.summary_polyline|safe }}";
+              
+              if (encodedPolyline && encodedPolyline !== "None" && encodedPolyline !== "") {
+                // Decode the polyline
+                // The polyline library from Mapbox provides polyline.decode()
+                var coordinates = polyline.decode(encodedPolyline);
+                
+                var map = L.map('activityMap');
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  maxZoom: 18,
+                  attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                var route = L.polyline(coordinates, {
+                  color: '#ff4400',
+                  weight: 4,
+                  opacity: 0.8,
+                  lineJoin: 'round'
+                }).addTo(map);
+
+                // Zoom the map to the polyline
+                map.fitBounds(route.getBounds(), { padding: [20, 20] });
+              } else {
+                // Default view if no polyline
+                var start_latlng = {{ activity.start_latlng|safe|default:"[19.4326, -99.1332]" }};
+                var map = L.map('activityMap').setView(start_latlng, 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  maxZoom: 18,
+                  attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                
+                L.marker(start_latlng).addTo(map)
+                  .bindPopup('Start Point')
+                  .openPopup();
+              }
             });
             </script>
       </div>

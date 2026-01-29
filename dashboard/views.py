@@ -339,33 +339,40 @@ def fetch_and_sync_activities(athlete, access_token):
 
             # 3. Sincronizar con la DB
             for item in strava_activities:
-                # Comprobar si ya existe (evitar duplicados, aunque el filtro `after` ya ayuda)
-                if Activity.objects.filter(id=item['id']).exists():
-                    continue
-
                 # Convertir la fecha UTC (string) a objeto datetime
                 start_date_utc = datetime.strptime(item['start_date'], '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
                 start_date_local = datetime.strptime(item['start_date_local'], '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
-                
-                # Crear la actividad
-                Activity.objects.create(
+
+                # Extraer datos de mapa si existen
+                map_data = item.get('map', {})
+                summary_polyline = map_data.get('summary_polyline')
+                start_latlng = item.get('start_latlng')
+                end_latlng = item.get('end_latlng')
+
+                # Crear o actualizar la actividad
+                Activity.objects.update_or_create(
                     id=item['id'],
-                    athlete=athlete,
-                    name=item['name'],
-                    distance=item['distance'],
-                    moving_time=item['moving_time'],
-                    elapsed_time=item['elapsed_time'],
-                    total_elevation_gain=item['total_elevation_gain'],
-                    type=item['type'],
-                    sport_type=item['sport_type'],
-                    average_speed=item['average_speed'],
-                    max_speed=item['max_speed'],
-                    has_heartrate=item.get('has_heartrate', False),
-                    average_heartrate=item.get('average_heartrate'),
-                    max_heartrate=item.get('max_heartrate'),
-                    start_date=start_date_utc,
-                    start_date_local=start_date_local,
-                    timezone=item['timezone'],
+                    defaults={
+                        'athlete': athlete,
+                        'name': item['name'],
+                        'distance': item['distance'],
+                        'moving_time': item['moving_time'],
+                        'elapsed_time': item['elapsed_time'],
+                        'total_elevation_gain': item['total_elevation_gain'],
+                        'type': item['type'],
+                        'sport_type': item['sport_type'],
+                        'average_speed': item['average_speed'],
+                        'max_speed': item['max_speed'],
+                        'has_heartrate': item.get('has_heartrate', False),
+                        'average_heartrate': item.get('average_heartrate'),
+                        'max_heartrate': item.get('max_heartrate'),
+                        'start_date': start_date_utc,
+                        'start_date_local': start_date_local,
+                        'timezone': item['timezone'],
+                        'summary_polyline': summary_polyline,
+                        'start_latlng': json.dumps(start_latlng) if start_latlng else None,
+                        'end_latlng': json.dumps(end_latlng) if end_latlng else None,
+                    }
                 )
                 new_activities_count += 1
                 

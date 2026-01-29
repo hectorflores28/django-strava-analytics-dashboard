@@ -58,6 +58,11 @@ class Activity(models.Model):
     start_date_local = models.DateTimeField(help_text="Start date in local time zone")
     timezone = models.CharField(max_length=100)
     
+    # Datos de mapa
+    summary_polyline = models.TextField(blank=True, null=True, help_text="Encoded polyline for the activity map")
+    start_latlng = models.CharField(max_length=100, blank=True, null=True, help_text="Starting coordinates [lat, lng]")
+    end_latlng = models.CharField(max_length=100, blank=True, null=True, help_text="Ending coordinates [lat, lng]")
+    
     # Campo para la racha (streak) u otros metadatos calculados
     calculated_day = models.DateField(db_index=True, help_text="Date part of start_date_local for daily grouping")
 
