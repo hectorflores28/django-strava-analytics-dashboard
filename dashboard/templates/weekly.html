@@ -1,0 +1,75 @@
+{% extends "base.html" %} {% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h1>Weekly Progress</h1>
+    <p class="text-muted">Your activity data grouped by week</p>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        {% if weekly_data %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Week</th>
+                <th class="text-center">
+                  <i class="bi bi-activity"></i>
+                  Activities
+                </th>
+                <th class="text-end">
+                  <i class="bi bi-signpost"></i>
+                  Distance (km)
+                </th>
+                <th class="text-end">
+                  <i class="bi bi-mountain"></i>
+                  Elevation (m)
+                </th>
+                <th class="text-end">
+                  <i class="bi bi-clock"></i>
+                  Time (h)
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for week in weekly_data %}
+              <tr>
+                <td><strong>{{ week.week }}</strong></td>
+                <td class="text-center">
+                  <span class="badge bg-primary">{{ week.data.count }}</span>
+                </td>
+                <td class="text-end">
+                  <span class="badge bg-secondary"
+                    >{{ week.data.distance|floatformat:2 }}</span
+                  >
+                </td>
+                <td class="text-end">
+                  <span class="badge bg-success"
+                    >{{ week.data.elevation|floatformat:0 }}</span
+                  >
+                </td>
+                <td class="text-end">
+                  <span class="badge bg-info"
+                    >{{ week.data.time|floatformat:1 }}</span
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+          No weekly data available.
+          <a href="{% url 'refresh_activities' %}">Refresh your data</a> to load
+          activities.
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

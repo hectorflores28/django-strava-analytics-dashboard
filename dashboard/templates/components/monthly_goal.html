@@ -1,0 +1,19 @@
+<!-- Barra de progreso para meta mensual -->
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">Progreso de Meta Mensual</h5>
+    <p>Meta: <strong>{{ meta_mensual }} km</strong></p>
+    <div class="progress mb-2" style="height: 30px">
+      <div
+        class="progress-bar bg-success"
+        role="progressbar"
+        style="width: {{ avance_porcentaje }}%;"
+        aria-valuenow="{{ avance_mensual|floatformat:2 }}"
+        aria-valuemin="0"
+        aria-valuemax="{{ meta_mensual }}"
+      >
+        {{ avance_mensual|floatformat:2 }} km / {{ meta_mensual }} km
+      </div>
+    </div>
+  </div>
+</div>
