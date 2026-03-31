@@ -1,5 +1,9 @@
 # Panel de Análisis de Strava
 
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![Django](https://img.shields.io/badge/Django-5.0+-green.svg)
+![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 Una aplicación web local completa para rastrear y analizar tus datos de actividad de Strava con actualizaciones automáticas diarias.
 
 ![Home](public/screenshot.png)
